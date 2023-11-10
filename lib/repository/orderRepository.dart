@@ -9,7 +9,8 @@ const String SERVER = "http://83.222.10.86:8080";
 class Repository {
   Future<Order> fetchOrder(int id) async {
     final response =
-        await http.get(Uri.parse("$SERVER/order/$id"));
+        await http.get(Uri.parse("$SERVER/order/$id"), headers: {"Accept": "application/json",
+    "Access-Control_Allow_Origin": "*"});
     if (response.statusCode == 200) {
       return Order.fromJson(jsonDecode(response.body));
     } else {
@@ -17,22 +18,13 @@ class Repository {
     }
   }
 
-  Future<List<Order>> parseOrderFromFile() async {
-    final response =
-    await http.post(Uri.parse("$SERVER/order/parse"), headers: {"Accept": "application/json",
-      "Access-Control_Allow_Origin": "*"});
-    if (response.statusCode == 200) {
-      return List<Order>.from(
-          json.decode(response.body).map((v) => Order.fromJson(v)));
-    } else {
-      throw Exception('Failed to load order');
-    }
-  }
+
 
   Future<List<Order>> fetchListOfOrders() async {
     final response =
-        await http.get(Uri.parse("$SERVER/order"), headers: {"Accept": "application/json",
-          "Access-Control_Allow_Origin": "*"});
+        await http.get(
+            Uri.parse("$SERVER/order"),
+            headers: {"Accept": "application/json", "Access-Control_Allow_Origin": "*"});
     if (response.statusCode == 200) {
       return List<Order>.from(
           json.decode(response.body).map((v) => Order.fromJson(v)));
