@@ -57,8 +57,7 @@ class NewOrderFormPageState extends StateMVC {
                 final order = Order(
                   customer: Customer(
                       name: nameController.text,
-                      phone: phoneController.text,
-                      email: emailController.text),
+                      phone: phoneController.text),
                   transferType: _transferType.toString(),
                   delivery: Delivery(
                       deliveryTime: DeliveryTime(

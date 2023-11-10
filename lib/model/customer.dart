@@ -8,11 +8,9 @@ class Customer {
   final String name;
   @JsonKey(defaultValue: "")
   final String phone;
-  @JsonKey(defaultValue: "")
-  final String email;
 
   const Customer(
-      {required this.name, required this.phone, required this.email});
+      {required this.name, required this.phone});
 
   factory Customer.fromJson(Map<String, dynamic> json) =>
       _$CustomerFromJson(json);

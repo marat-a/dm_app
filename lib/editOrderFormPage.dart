@@ -41,7 +41,6 @@ class EditOrderFormPageState extends State<EditOrderFormPage> {
     order = widget.orderForUpdate;
     nameController = TextEditingController(text: order.customer.name);
     phoneController = TextEditingController(text: order.customer.phone);
-    emailController = TextEditingController(text: order.customer.email);
     orderCommentController = TextEditingController(text: order.orderComment);
     commentController = TextEditingController(text: order.delivery.comment);
     addressController = TextEditingController(text: order.delivery.address);
@@ -72,8 +71,7 @@ class EditOrderFormPageState extends State<EditOrderFormPage> {
                   id: order.id,
                   customer: Customer(
                       name: nameController.text,
-                      phone: phoneController.text,
-                      email: emailController.text),
+                      phone: phoneController.text),
                   transferType: transferType.toString(),
                   delivery: Delivery(
                       deliveryTime: DeliveryTime(

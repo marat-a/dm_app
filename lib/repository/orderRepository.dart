@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 
 import '../model/order.dart';
 
-const String SERVER = "http://localhost:8080";
+const String SERVER = "http://83.222.10.86:8080";
+// const String SERVER = "http://localhost:8080";
 class Repository {
   Future<Order> fetchOrder(int id) async {
     final response =
