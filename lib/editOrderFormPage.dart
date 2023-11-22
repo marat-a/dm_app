@@ -4,9 +4,9 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
-import 'model/customer.dart';
+import 'model/Customer.dart';
 import 'model/delivery.dart';
-import 'model/order.dart';
+import 'model/Order.dart';
 import 'controllers/orderController.dart';
 
 class EditOrderFormPage extends StatefulWidget {

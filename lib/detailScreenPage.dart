@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'editOrderFormPage.dart';
-import 'model/order.dart';
+import 'model/Order.dart';
 
 class DetailScreenPage extends StatefulWidget {
   final Order order;

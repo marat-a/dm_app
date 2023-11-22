@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'detailScreenPage.dart';
-import 'model/order.dart';
+import 'model/Order.dart';
 
 class Cards extends StatefulWidget {
   final Order order;
