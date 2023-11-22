@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'cards.dart';
-import 'model/order.dart';
+import 'model/Order.dart';
 import 'newOrderForm.dart';
 import 'repository/orderRepository.dart';
 

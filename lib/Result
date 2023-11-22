@@ -1,0 +1,29 @@
+abstract class OrderAdd {}
+
+class OrderAddSuccess extends OrderAdd {}
+
+class OrderAddFailure extends OrderAdd {}
+
+abstract class OrderUpdate {}
+
+class OrderUpdateSuccess extends OrderUpdate {}
+
+class OrderUpdateFailure extends OrderUpdate {}
+
+abstract class OrderResult {}
+
+class OrderResultSuccess extends OrderResult {
+  final OrderList orderList;
+
+  OrderResultSuccess(this.orderList);
+}
+
+class OrderResultFailure extends OrderResult {
+  final String error;
+
+  OrderResultFailure(this.error);
+}
+
+class OrderResultLoading extends OrderResult {
+  OrderResultLoading();
+}
