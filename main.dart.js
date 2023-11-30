@@ -8272,7 +8272,7 @@ UA(){var s=0,r=A.T(t.vb),q,p,o
 var $async$UA=A.U(function(a,b){if(a===1)return A.Q(b,r)
 while(true)switch(s){case 0:p=t.N
 s=3
-return A.W(A.as4(A.fB("http://92.118.113.20:8080/orders"),A.at(["Access-Control-Allow-Origin","*","Content-Type","application/json","Accept","*/*"],p,p)),$async$UA)
+return A.W(A.as4(A.fB("https://92.118.113.20:8080/orders"),A.at(["Access-Control-Allow-Origin","*","Content-Type","application/json","Accept","*/*"],p,p)),$async$UA)
 case 3:o=b
 if(o.b===200){p=J.ky(B.cb.dw(A.arQ(A.apZ(o.e).c.a.i(0,"charset")).dw(o.w)),new A.UB(),t._5)
 q=A.a_(p,!0,A.i(p).h("aO.E"))
