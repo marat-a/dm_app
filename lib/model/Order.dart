@@ -1,3 +1,4 @@
+import 'package:dm_app/model/Product.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'User.dart';
@@ -24,8 +25,8 @@ class Order {
   )
   final DateTime endTime;
 
-  @JsonKey(name: 'items')
-  final String items;
+  @JsonKey(name: 'products')
+  final List<Product> products;
 
   @JsonKey(
     name: 'sum',
@@ -50,7 +51,7 @@ class Order {
     required this.id,
     required this.startTime,
     required this.endTime,
-    required this.items,
+    required this.products,
     required this.sum,
     required this.courier,
     required this.customer,
