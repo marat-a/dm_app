@@ -21,6 +21,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   json_annotation: ^4.8.1
   mvc_pattern: ^8.12.0
+  datetime_picker_formfield: ^2.0.1
 
 dev_dependencies:
   flutter_test:
