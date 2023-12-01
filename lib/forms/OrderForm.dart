@@ -1,9 +1,10 @@
-import 'package:dm_app/forms/DateTimePickerPlus.dart';
+
 import 'package:dm_app/model/Customer.dart';
 import 'package:dm_app/model/Product.dart';
 import 'package:dm_app/model/User.dart';
 import 'package:flutter/material.dart';
-
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
 import '../model/Order.dart';
 import '../model/Role.dart';
 import '../repository/OrderService.dart';
@@ -25,7 +26,7 @@ class OrderFormState extends State<OrderForm> {
   late Customer customer;
   late String commentForCourier;
   late String commentForManager;
-
+  final format = DateFormat('yyyy-MM-dd HH:mm:ss');
   final OrderService _orderService = OrderService();
 
   @override
@@ -72,40 +73,78 @@ class OrderFormState extends State<OrderForm> {
                 },
               ),
               const SizedBox(height: 10),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Start Time'),
+
+
+              const SizedBox(height: 10),
+
+          DateTimeField(
+            decoration: const InputDecoration(
+              labelText: 'Select Start Date and Time',
+              border: OutlineInputBorder(),
+            ),
+            format: format,
+            onChanged: (value) {
+              setState(() {
+                startTime = value!;
+              });
+            },
+            onShowPicker: (context, currentValue) async {
+              final date = await showDatePicker(
+                context: context,
+                initialDate: currentValue ?? DateTime.now(),
+                firstDate: DateTime(1900),
+                lastDate: DateTime(2100),
+              );
+
+              if (date != null) {
+                final time = await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                );
+
+                // Combine the selected date and time into a DateTime object
+                if (time != null) {
+                  return DateTimeField.combine(date, time);
+                }
+              }
+
+              return currentValue;
+            },
+          ),
+              DateTimeField(
+                decoration: const InputDecoration(
+                  labelText: 'Select End Date and Time',
+                  border: OutlineInputBorder(),
+                ),
+                format: format,
                 onChanged: (value) {
                   setState(() {
-                    startTime = DateTime.parse(value);
+                    endTime = value!;
                   });
                 },
-                keyboardType: TextInputType.datetime,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a start time';
+                onShowPicker: (context, currentValue) async {
+                  final date = await showDatePicker(
+                    context: context,
+                    initialDate: currentValue ?? DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime(2100),
+                  );
+
+                  if (date != null) {
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                    );
+
+                    // Combine the selected date and time into a DateTime object
+                    if (time != null) {
+                      return DateTimeField.combine(date, time);
+                    }
                   }
-                  return null;
+
+                  return currentValue;
                 },
               ),
-              const DateTimePickerPlus(),
-              const SizedBox(height: 10),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'End Time'),
-                onChanged: (value) {
-                  setState(() {
-                    endTime = DateTime.parse(value);
-                  });
-                },
-                keyboardType: TextInputType.datetime,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a end time';
-                  }
-                  return null;
-                },
-              ),
-              const DateTimePickerPlus(),
-              const SizedBox(height: 10),
               const SizedBox(height: 10),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Courier Name'),
