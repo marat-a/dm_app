@@ -1,8 +1,12 @@
+
+
 import 'package:dm_app/forms/order_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'http_client.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  TextEditingController emailController = TextEditingController();
+  TextEditingController loginController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   String errorMessage = '';
@@ -25,14 +29,13 @@ class LoginScreenState extends State<LoginScreen> {
 
 
   Future<void> _login() async {
-    final String email = emailController.text.trim();
+    final String login = loginController.text.trim();
     final String password = passwordController.text.trim();
 
     // Отправка POST-запроса на ваше API
-    final response = await http.post(
-      Uri.parse('https://92.118.113.20/login'),
+    final response = await HttpClient.post(('/login'),
       body: {
-        'email': email,
+        'login': login,
         'password': password,
       },
     );
@@ -45,7 +48,7 @@ class LoginScreenState extends State<LoginScreen> {
       _navigateToOrdersScreen();
     } else {
       setState(() {
-        errorMessage = 'Неправильный email или пароль';
+        errorMessage = 'Неправильный логин или пароль';
       });
     }
   }
@@ -62,9 +65,9 @@ class LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-              controller: emailController,
+              controller: loginController,
               decoration: const InputDecoration(
-                labelText: 'Email',
+                labelText: 'Login',
               ),
             ),
             TextField(
