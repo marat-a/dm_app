@@ -33,7 +33,7 @@ class LoginScreenState extends State<LoginScreen> {
     final String password = passwordController.text.trim();
 
     // Отправка POST-запроса на ваше API
-    final response = await HttpClient.post(('/login'),
+    final response = await HttpClient.post(('/auth/login'),
       body: {
         'login': login,
         'password': password,
