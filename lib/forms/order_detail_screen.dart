@@ -18,7 +18,7 @@ class OrderDetailScreen extends StatelessWidget {
 
   void _deleteOrder(BuildContext context, Order order) {
     _orderController
-        .deleteOrder(order.id)
+        .deleteOrder(order.id!)
         .then((_) => Navigator.pop(context))
         .catchError((error) => print('Не удалось удалить заказ: $error'));
   }

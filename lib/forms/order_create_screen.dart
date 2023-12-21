@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dm_app/enums/role.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
-import 'package:http/http.dart' as http;
 
 
 import '../enums/delivery_type.dart';
@@ -24,7 +23,6 @@ class OrderCreateScreen extends StatefulWidget {
   OrderCreateScreenState createState() => OrderCreateScreenState();
 }
 
-
 class OrderCreateScreenState extends State<OrderCreateScreen> {
   final TextEditingController _sumController = TextEditingController();
   final TextEditingController _paidController = TextEditingController();
@@ -33,11 +31,13 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _productsController = TextEditingController();
-  final TextEditingController _deliveryCommentController = TextEditingController();
+  final TextEditingController _deliveryCommentController =
+      TextEditingController();
   PayStatus _payStatus = PayStatus.UNPAID;
   final List<PayStatus> _payStatusOptions = PayStatus.values.toList();
   ProgressStatus _progressStatus = ProgressStatus.NOTAPPROVED;
-  final List<ProgressStatus> _progressStatusOptions = ProgressStatus.values.toList();
+  final List<ProgressStatus> _progressStatusOptions =
+      ProgressStatus.values.toList();
   late List<Product> _products = [];
   Product? _selectedProduct;
   DateTime startTime = DateTime.now();
@@ -45,8 +45,7 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
   List<User> _couriers = [];
   User? _selectedCourier;
   static const baseUrl = 'http://localhost:8080';
-
-
+  late Role role;
 
   @override
   void initState() {
@@ -66,8 +65,9 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
       });
     }
   }
+
   Future<void> _fetchUsers() async {
-    final response =  await HttpClient.get('/users');
+    final response = await HttpClient.get('/users');
     if (response.statusCode == 200) {
       final List<dynamic> responseData = jsonDecode(response.body);
       setState(() {
@@ -86,16 +86,17 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
       startTime: startTime,
       endTime: endTime,
       courier: _selectedCourier!,
-      deliveryType: DeliveryType.DELIVERY, // Замените на фактическое значение
+      // deliveryType: DeliveryType.DELIVERY,
       deliveryComment: _deliveryCommentController.text,
     );
 
-    final Customer customer = Customer(id: 0,
+    final Customer customer = Customer(
+        id: 0,
         name: _nameController.text,
         phone: _phoneController.text,
-        role: Role.CUSTOMER,
-        address: _addressController.text, orders: []);
-
+        roles: {},
+        address: _addressController.text,
+        orders: []);
 
     final order = Order(
       id: 0,
@@ -112,7 +113,8 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
     _orderController
         .createOrder(order)
         .then((_) => Navigator.pop(context))
-        .catchError((error) => throw Exception('Не удалось удалить заказ: $error'));
+        .catchError(
+            (error) => throw Exception('Не удалось удалить заказ: $error'));
   }
 
   @override
@@ -121,7 +123,7 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
       appBar: AppBar(
         title: const Text('Создание заказа'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -137,17 +139,13 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                 labelText: 'Оплаченная сумма',
               ),
             ),
-
-            const Text(
-        'Период доставки'),
-
-
-        TextButton(
-            onPressed: () {
-              DatePicker.showDateTimePicker(context,
-                  showTitleActions: true,
-                  minTime: DateTime(2020, 3, 5),
-                  maxTime: DateTime(2025, 6, 7), onChanged: (date) {
+            const Text('Период доставки'),
+            TextButton(
+                onPressed: () {
+                  DatePicker.showDateTimePicker(context,
+                      showTitleActions: true,
+                      minTime: DateTime(2020, 3, 5),
+                      maxTime: DateTime(2025, 6, 7), onChanged: (date) {
                     setState(() {
                       startTime = date;
                     });
@@ -156,26 +154,25 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                       startTime = date;
                     });
                   }, currentTime: startTime, locale: LocaleType.ru);
-            },
-            child:  Text(
-              startTime.toString(),
-              style: TextStyle(color: Colors.blue),
-            )),
+                },
+                child: Text(
+                  startTime.toString(),
+                  style: TextStyle(color: Colors.blue),
+                )),
             TextButton(
                 onPressed: () {
                   DatePicker.showDateTimePicker(context,
                       showTitleActions: true,
                       minTime: DateTime(2018, 3, 5),
                       maxTime: DateTime(2019, 6, 7), onChanged: (date) {
-                        setState(() {
-                          endTime = date;
-                        });
-                      }, onConfirm: (date) {
-                        setState(() {
-                          endTime = date;
-                        });
-
-                      }, currentTime: endTime, locale: LocaleType.ru);
+                    setState(() {
+                      endTime = date;
+                    });
+                  }, onConfirm: (date) {
+                    setState(() {
+                      endTime = date;
+                    });
+                  }, currentTime: endTime, locale: LocaleType.ru);
                 },
                 child: const Text(
                   'Выберите время окончания',
@@ -204,7 +201,8 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                   _selectedProduct = selectedProduct;
                 });
               },
-              items: _products.map<DropdownMenuItem<Product>>((Product product) {
+              items:
+                  _products.map<DropdownMenuItem<Product>>((Product product) {
                 return DropdownMenuItem<Product>(
                   value: product,
                   child: Text(product.name),
@@ -218,10 +216,13 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                   _payStatus = value!;
                 });
               },
-              items: _payStatusOptions.map<DropdownMenuItem<PayStatus>>((PayStatus value) {
+              items: _payStatusOptions
+                  .map<DropdownMenuItem<PayStatus>>((PayStatus value) {
                 return DropdownMenuItem<PayStatus>(
                   value: value,
-                  child: Text(value.toString().split('.')[1]), // Отображение имени значения enum
+                  child: Text(value
+                      .toString()
+                      .split('.')[1]), // Отображение имени значения enum
                 );
               }).toList(),
             ),
@@ -232,7 +233,9 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                   _progressStatus = value!;
                 });
               },
-              items: _progressStatusOptions.map<DropdownMenuItem<ProgressStatus>>((ProgressStatus value) {
+              items: _progressStatusOptions
+                  .map<DropdownMenuItem<ProgressStatus>>(
+                      (ProgressStatus value) {
                 return DropdownMenuItem<ProgressStatus>(
                   value: value,
                   child: Text(value.toString().split('.')[1]),
@@ -263,8 +266,6 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                 labelText: 'Комментарий для менеджера',
               ),
             ),
-
-
             TextField(
               controller: _deliveryCommentController,
               decoration: const InputDecoration(
@@ -277,9 +278,6 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                 labelText: 'Список товаров',
               ),
             ),
-
-
-
             ElevatedButton(
               onPressed: _createOrder,
               child: const Text('Создать заказ'),

@@ -11,7 +11,7 @@ class DeliveryInfo {
   late DateTime startTime;
   late DateTime endTime;
   late User courier;
-  late DeliveryType deliveryType;
+  // late DeliveryType deliveryType;
   late String deliveryComment;
 
   DeliveryInfo({
@@ -19,7 +19,7 @@ class DeliveryInfo {
     required this.startTime,
     required this.endTime,
     required this.courier,
-    required this.deliveryType,
+    // required this.deliveryType,
     required this.deliveryComment,
   });
 

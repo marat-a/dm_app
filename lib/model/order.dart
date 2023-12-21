@@ -10,15 +10,15 @@ part 'order.g.dart';
 
 @JsonSerializable()
 class Order {
-  late int id;
-  late DeliveryInfo deliveryInfo;
-  late List<Product> products;
-  late double sum;
-  late double paid;
-  late PayStatus payStatus;
-  late ProgressStatus progressStatus;
-  late Customer customer;
-  late String commentForManager;
+  int? id;
+  DeliveryInfo? deliveryInfo;
+  List<Product>? products;
+  double? sum;
+   double? paid;
+   PayStatus? payStatus;
+   ProgressStatus? progressStatus;
+   Customer? customer;
+   String? commentForManager;
 
   Order({
     required this.id,
