@@ -1,4 +1,6 @@
 enum Role {
   ADMIN,
-  USER,
+  MANAGER,
+  CUSTOMER,
+  USER
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:http/http.dart' as http;
 
+
 import '../enums/delivery_type.dart';
 import '../enums/pay_status.dart';
 import '../enums/progress_status.dart';
@@ -14,6 +15,7 @@ import '../model/user.dart';
 import '../model/delivery_info.dart';
 import '../model/product.dart';
 import '../repository/order_repository.dart';
+import '../http_client.dart';
 
 class OrderCreateScreen extends StatefulWidget {
   const OrderCreateScreen({super.key});
@@ -27,9 +29,11 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
   final TextEditingController _sumController = TextEditingController();
   final TextEditingController _paidController = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
-  final TextEditingController _deliveryInfoController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _productsController = TextEditingController();
-  final TextEditingController _customerController = TextEditingController();
+  final TextEditingController _deliveryCommentController = TextEditingController();
   PayStatus _payStatus = PayStatus.UNPAID;
   final List<PayStatus> _payStatusOptions = PayStatus.values.toList();
   ProgressStatus _progressStatus = ProgressStatus.NOTAPPROVED;
@@ -38,23 +42,36 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
   Product? _selectedProduct;
   DateTime startTime = DateTime.now();
   DateTime endTime = DateTime.now();
+  List<User> _couriers = [];
+  User? _selectedCourier;
+  static const baseUrl = 'http://localhost:8080';
 
-  final TextEditingController _deliveryCommentController = TextEditingController();
+
 
   @override
   void initState() {
     super.initState();
     _fetchProducts();
+    _fetchUsers();
   }
 
   final OrderRepository _orderController = OrderRepository();
 
   Future<void> _fetchProducts() async {
-    final response = await http.get(Uri.parse('https://92.118.113.20/products'));
+    final response = await HttpClient.get('/products');
     if (response.statusCode == 200) {
       final List<dynamic> responseData = jsonDecode(response.body);
       setState(() {
         _products = responseData.map((json) => Product.fromJson(json)).toList();
+      });
+    }
+  }
+  Future<void> _fetchUsers() async {
+    final response =  await HttpClient.get('/users');
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = jsonDecode(response.body);
+      setState(() {
+        _couriers = responseData.map((json) => User.fromJson(json)).toList();
       });
     }
   }
@@ -68,12 +85,16 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
       id: 0,
       startTime: startTime,
       endTime: endTime,
-      courier: User(id: 0, name: '', phone: '', role: Role.USER ),
+      courier: _selectedCourier!,
       deliveryType: DeliveryType.DELIVERY, // Замените на фактическое значение
       deliveryComment: _deliveryCommentController.text,
     );
 
-    final Customer customer = Customer.fromJson(jsonDecode(_customerController.text));
+    final Customer customer = Customer(id: 0,
+        name: _nameController.text,
+        phone: _phoneController.text,
+        role: Role.CUSTOMER,
+        address: _addressController.text, orders: []);
 
 
     final order = Order(
@@ -107,18 +128,23 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
             TextField(
               controller: _sumController,
               decoration: const InputDecoration(
-                labelText: 'Сумма',
+                labelText: 'Сумма заказа',
               ),
             ),
             TextField(
               controller: _paidController,
               decoration: const InputDecoration(
-                labelText: 'Оплачено',
+                labelText: 'Оплаченная сумма',
               ),
             ),
+
+            const Text(
+        'Период доставки'),
+
+
         TextButton(
             onPressed: () {
-              DatePicker.showDatePicker(context,
+              DatePicker.showDateTimePicker(context,
                   showTitleActions: true,
                   minTime: DateTime(2020, 3, 5),
                   maxTime: DateTime(2025, 6, 7), onChanged: (date) {
@@ -131,13 +157,13 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                     });
                   }, currentTime: startTime, locale: LocaleType.ru);
             },
-            child: const Text(
-              'Выберите время начала',
+            child:  Text(
+              startTime.toString(),
               style: TextStyle(color: Colors.blue),
             )),
             TextButton(
                 onPressed: () {
-                  DatePicker.showDatePicker(context,
+                  DatePicker.showDateTimePicker(context,
                       showTitleActions: true,
                       minTime: DateTime(2018, 3, 5),
                       maxTime: DateTime(2019, 6, 7), onChanged: (date) {
@@ -155,6 +181,21 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                   'Выберите время окончания',
                   style: TextStyle(color: Colors.blue),
                 )),
+            DropdownButton<User>(
+              value: _selectedCourier,
+              hint: const Text('Выберите пользователя'),
+              onChanged: (User? selectedUser) {
+                setState(() {
+                  _selectedCourier = selectedUser!;
+                });
+              },
+              items: _couriers.map<DropdownMenuItem<User>>((User user) {
+                return DropdownMenuItem<User>(
+                  value: user,
+                  child: Text(user.name),
+                );
+              }).toList(),
+            ),
             DropdownButton<Product>(
               value: _selectedProduct,
               hint: const Text('Выберите товар'),
@@ -199,14 +240,33 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
               }).toList(),
             ),
             TextField(
+              controller: _phoneController,
+              decoration: const InputDecoration(
+                labelText: 'Телефон покупателя',
+              ),
+            ),
+            TextField(
+              controller: _addressController,
+              decoration: const InputDecoration(
+                labelText: 'Адрес покупателя',
+              ),
+            ),
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: 'Имя покупателя',
+              ),
+            ),
+            TextField(
               controller: _commentController,
               decoration: const InputDecoration(
                 labelText: 'Комментарий для менеджера',
               ),
             ),
 
+
             TextField(
-              controller: _deliveryInfoController,
+              controller: _deliveryCommentController,
               decoration: const InputDecoration(
                 labelText: 'Информация о доставке',
               ),
@@ -217,12 +277,9 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                 labelText: 'Список товаров',
               ),
             ),
-            TextField(
-              controller: _customerController,
-              decoration: const InputDecoration(
-                labelText: 'Покупатель',
-              ),
-            ),
+
+
+
             ElevatedButton(
               onPressed: _createOrder,
               child: const Text('Создать заказ'),

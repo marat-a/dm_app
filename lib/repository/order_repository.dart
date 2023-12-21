@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../http_client.dart';
 import '../model/order.dart';
 
 class OrderRepository {
-  static const baseUrl = 'https://92.118.113.20';
+  static const baseUrl = 'http://localhost:8080';
 
   Future<List<Order>> getAllOrders() async {
-    final response = await http.get(Uri.parse('$baseUrl/orders'));
+    final response = await HttpClient.get('/orders');
 
     if (response.statusCode == 200) {
       final List<dynamic> responseData = jsonDecode(response.body);
@@ -19,7 +20,7 @@ class OrderRepository {
   }
 
   Future<Order> getOrderById(int id) async {
-    final response = await http.get(Uri.parse('$baseUrl/orders/$id'));
+    final response = await HttpClient.get('/orders/$id');
 
     if (response.statusCode == 200) {
       final dynamic responseData = jsonDecode(response.body);
@@ -30,10 +31,8 @@ class OrderRepository {
   }
 
   Future<Order> createOrder(Order order) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/orders'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(order.toJson()),
+    final response = await HttpClient.post('/orders',
+      body: {'data': jsonEncode(order.toJson())},
     );
 
     if (response.statusCode == 200) {
@@ -45,10 +44,8 @@ class OrderRepository {
   }
 
   Future<Order> updateOrder(int id, Order order) async {
-    final response = await http.put(
-      Uri.parse('$baseUrl/orders/$id'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(order.toJson()),
+    final response = await HttpClient.post('/orders/$id',
+        body: {'data': jsonEncode(order.toJson())},
     );
 
     if (response.statusCode == 200) {
@@ -60,7 +57,7 @@ class OrderRepository {
   }
 
   Future<void> deleteOrder(int id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/orders/$id'));
+    final response = await HttpClient.delete('/orders/$id');
 
     if (response.statusCode != 200) {
       throw Exception('Не удалось удалить заказ');

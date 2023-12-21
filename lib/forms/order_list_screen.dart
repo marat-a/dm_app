@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../model/order.dart';
 import '../repository/order_repository.dart';
+import 'order_create_screen.dart';
 import 'order_detail_screen.dart';
 
 class OrderListScreen extends StatefulWidget {
@@ -44,6 +45,17 @@ class OrderListScreenState extends State<OrderListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Список заказов'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => OrderCreateScreen()),
+              );
+            },
+            child: const Text('Создать заказ'),
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: _orders.length,

@@ -31,8 +31,6 @@ class LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     final String login = loginController.text.trim();
     final String password = passwordController.text.trim();
-
-    // Отправка POST-запроса на ваше API
     final response = await HttpClient.post(('/auth/login'),
       body: {
         'login': login,
