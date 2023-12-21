@@ -1,0 +1,6 @@
+enum ERole {
+  ADMIN,
+  MANAGER,
+  COURIER,
+  CUSTOMER,
+}

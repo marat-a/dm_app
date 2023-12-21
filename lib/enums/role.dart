@@ -1,4 +1,4 @@
-import '../model/erole.dart';
+import 'erole.dart';
 
 class Role {
   int id;
@@ -9,18 +9,17 @@ class Role {
     required this.name,
   });
 
-
   factory Role.fromJson(Map<String, dynamic> json) {
     return Role(
-      id: json['id'],
-      name: ERole.fromJson(json['name']),
+      id: json['id'] as int,
+      name: ERole.values.firstWhere((role) => role.toString() == 'ERole.${json['name']}'),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name.toJson(),
+      'name': name.toString().split('.').last,
     };
   }
 }

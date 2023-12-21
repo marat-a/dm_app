@@ -4,17 +4,15 @@ import 'package:dm_app/enums/role.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
-
-import '../enums/delivery_type.dart';
 import '../enums/pay_status.dart';
 import '../enums/progress_status.dart';
-import '../model/customer.dart';
-import '../model/order.dart';
-import '../model/user.dart';
-import '../model/delivery_info.dart';
-import '../model/product.dart';
-import '../repository/order_repository.dart';
 import '../http_client.dart';
+import '../model/customer.dart';
+import '../model/delivery_info.dart';
+import '../model/order.dart';
+import '../model/product.dart';
+import '../model/user.dart';
+import '../repository/order_repository.dart';
 
 class OrderCreateScreen extends StatefulWidget {
   const OrderCreateScreen({super.key});
@@ -45,7 +43,7 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
   List<User> _couriers = [];
   User? _selectedCourier;
   static const baseUrl = 'http://localhost:8080';
-  late Role role;
+  Role? role;
 
   @override
   void initState() {
@@ -189,7 +187,7 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
               items: _couriers.map<DropdownMenuItem<User>>((User user) {
                 return DropdownMenuItem<User>(
                   value: user,
-                  child: Text(user.name),
+                  child: Text(user!.name!),
                 );
               }).toList(),
             ),
@@ -249,6 +247,12 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
               ),
             ),
             TextField(
+              controller: _deliveryCommentController,
+              decoration: const InputDecoration(
+                labelText: 'Комментарий для курьера',
+              ),
+            ),
+            TextField(
               controller: _addressController,
               decoration: const InputDecoration(
                 labelText: 'Адрес покупателя',
@@ -266,12 +270,7 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                 labelText: 'Комментарий для менеджера',
               ),
             ),
-            TextField(
-              controller: _deliveryCommentController,
-              decoration: const InputDecoration(
-                labelText: 'Информация о доставке',
-              ),
-            ),
+
             TextField(
               controller: _productsController,
               decoration: const InputDecoration(

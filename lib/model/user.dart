@@ -8,7 +8,15 @@ class User {
   Set<Role>? roles;
   String? login;
 
-
+  // Конструктор класса User
+  User({
+    this.id,
+    this.name,
+    this.phone,
+    this.password,
+    this.roles,
+    this.login,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -31,7 +39,4 @@ class User {
       'login': login,
     };
   }
-
-  User(
-      this.id, this.name, this.phone, this.password, this.roles, this.login, {required id});
 }
