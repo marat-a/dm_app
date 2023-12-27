@@ -8,6 +8,8 @@ import '../model/order.dart';
 class OrderRepository {
   static const baseUrl = 'http://localhost:8080';
 
+
+
   Future<List<Order>> getAllOrders() async {
     final response = await HttpClient.get('/orders');
 
@@ -32,7 +34,7 @@ class OrderRepository {
 
   Future<Order> createOrder(Order order) async {
     final response = await HttpClient.post('/orders',
-      body: {'data': jsonEncode(order.toJson())},
+      body: order,
     );
 
     if (response.statusCode == 200) {

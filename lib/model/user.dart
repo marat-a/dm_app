@@ -24,7 +24,9 @@ class User {
       name: json['name'],
       phone: json['phone'],
       password: json['password'],
-      roles: Set<Role>.from(json['roles'].map((x) => Role.fromJson(x))),
+      roles: json['roles'] != null
+          ? Set<Role>.from(json['roles'].map((x) => Role.fromJson(x)))
+          : null,
       login: json['login'],
     );
   }

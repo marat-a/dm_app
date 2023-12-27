@@ -14,22 +14,22 @@ class Order {
   DeliveryInfo? deliveryInfo;
   List<Product>? products;
   double? sum;
-   double? paid;
-   PayStatus? payStatus;
-   ProgressStatus? progressStatus;
-   Customer? customer;
-   String? commentForManager;
+  double? paid;
+  PayStatus? payStatus;
+  ProgressStatus? progressStatus;
+  Customer? customer;
+  String? commentForManager;
 
   Order({
-    required this.id,
-    required this.deliveryInfo,
-    required this.products,
-    required this.sum,
-    required this.paid,
-    required this.payStatus,
-    required this.progressStatus,
-    required this.customer,
-    required this.commentForManager,
+    this.id,
+    this.deliveryInfo,
+    this.products,
+    this.sum,
+    this.paid,
+    this.payStatus,
+    this.progressStatus,
+    this.customer,
+    this.commentForManager,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);

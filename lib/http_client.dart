@@ -1,12 +1,16 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HttpClient {
   static const String baseUrl = "http://localhost:8080";
   static const String tokenHeader = 'Authorization';
 
+
   static Future<http.Response> get(String path, {String? token}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
     final url = Uri.parse('$baseUrl$path');
     final headers = <String, String>{};
 
@@ -21,7 +25,9 @@ class HttpClient {
     return await http.get(url, headers: headers);
   }
 
-  static Future<http.Response> post(String path, {String? token, Map<String, String>? body}) async {
+  static Future<http.Response> post(String path, {String? token, Object? body}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
     final url = Uri.parse('$baseUrl$path');
     final headers = <String, String>{};
     if (token != null) {

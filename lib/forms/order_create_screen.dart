@@ -40,6 +40,7 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
   Product? _selectedProduct;
   DateTime startTime = DateTime.now();
   DateTime endTime = DateTime.now();
+
   List<User> _couriers = [];
   User? _selectedCourier;
   static const baseUrl = 'http://localhost:8080';
@@ -52,7 +53,7 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
     _fetchUsers();
   }
 
-  final OrderRepository _orderController = OrderRepository();
+  final OrderRepository _orderRepository = OrderRepository();
 
   Future<void> _fetchProducts() async {
     final response = await HttpClient.get('/products');
@@ -83,23 +84,20 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
       id: 0,
       startTime: startTime,
       endTime: endTime,
-      courier: _selectedCourier!,
+      courier: _selectedCourier,
       // deliveryType: DeliveryType.DELIVERY,
       deliveryComment: _deliveryCommentController.text,
     );
 
     final Customer customer = Customer(
-        id: 0,
         name: _nameController.text,
         phone: _phoneController.text,
-        roles: {},
-        address: _addressController.text,
-        orders: []);
+        address: _addressController.text);
 
     final order = Order(
       id: 0,
       deliveryInfo: deliveryInfo,
-      products: [_selectedProduct!],
+      products: _products,
       sum: sum,
       paid: paid,
       payStatus: _payStatus,
@@ -108,11 +106,11 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
       commentForManager: comment,
     );
 
-    _orderController
+    _orderRepository
         .createOrder(order)
         .then((_) => Navigator.pop(context))
         .catchError(
-            (error) => throw Exception('Не удалось удалить заказ: $error'));
+            (error) => throw Exception('Не создать удалить заказ: $error'));
   }
 
   @override

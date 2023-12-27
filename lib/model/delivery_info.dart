@@ -7,20 +7,20 @@ part 'delivery_info.g.dart';
 
 @JsonSerializable()
 class DeliveryInfo {
-  late int id;
-  late DateTime startTime;
-  late DateTime endTime;
-  late User courier;
+  int? id;
+  DateTime? startTime;
+  DateTime? endTime;
+  User? courier;
   // late DeliveryType deliveryType;
-  late String deliveryComment;
+  String? deliveryComment;
 
   DeliveryInfo({
-    required this.id,
-    required this.startTime,
-    required this.endTime,
-    required this.courier,
+    this.id,
+    this.startTime,
+    this.endTime,
+    this.courier,
     // required this.deliveryType,
-    required this.deliveryComment,
+    this.deliveryComment,
   });
 
   factory DeliveryInfo.fromJson(Map<String, dynamic> json) => _$DeliveryInfoFromJson(json);

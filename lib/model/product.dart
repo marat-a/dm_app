@@ -15,5 +15,5 @@ class Product {
 
   Map<String, dynamic> toJson() => _$ProductToJson(this);
 
-  Product(this.name);
+  Product(this.name, this.price);
 }
