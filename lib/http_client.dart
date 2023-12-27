@@ -15,7 +15,7 @@ class HttpClient {
     final headers = <String, String>{};
 
     if (token != null) {
-      headers[tokenHeader] = 'Bearer $token';
+      headers[tokenHeader] = "Bearer $token";
     }
     headers["Access-Control-Allow-Origin"] = "*";
     headers["Access-Control-Allow-Credentials"] = "true";
@@ -27,11 +27,11 @@ class HttpClient {
 
   static Future<http.Response> post(String path, {String? token, Object? body}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+    String? authToken = prefs.getString('token');
     final url = Uri.parse('$baseUrl$path');
     final headers = <String, String>{};
-    if (token != null) {
-      headers[tokenHeader] = 'Bearer $token';
+    if (authToken != null) {
+      headers[tokenHeader] = "Bearer $authToken";
     }
     headers["Access-Control-Allow-Origin"] = "*";
     headers["Access-Control-Allow-Credentials"] = "true";
