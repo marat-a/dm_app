@@ -6,7 +6,7 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
 import '../enums/pay_status.dart';
 import '../enums/progress_status.dart';
-import '../http_client.dart';
+import '../repository/http_client.dart';
 import '../model/customer.dart';
 import '../model/delivery_info.dart';
 import '../model/order.dart';
@@ -28,7 +28,6 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _productsController = TextEditingController();
   final TextEditingController _deliveryCommentController =
       TextEditingController();
   PayStatus _payStatus = PayStatus.UNPAID;
@@ -269,12 +268,7 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
               ),
             ),
 
-            TextField(
-              controller: _productsController,
-              decoration: const InputDecoration(
-                labelText: 'Список товаров',
-              ),
-            ),
+
             ElevatedButton(
               onPressed: _createOrder,
               child: const Text('Создать заказ'),

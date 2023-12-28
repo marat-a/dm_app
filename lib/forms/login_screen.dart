@@ -1,12 +1,11 @@
 
 
-import 'package:dm_app/forms/order_list_screen.dart';
+import 'package:dm_app/forms/HomeScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'http_client.dart';
+import '../repository/http_client.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,8 +21,9 @@ class LoginScreenState extends State<LoginScreen> {
   String errorMessage = '';
 
 
-  void _navigateToOrdersScreen() {
-    final MaterialPageRoute route = MaterialPageRoute(builder: (context) => const OrderListScreen());
+  void _navigateToHomeScreen(List<String> roles) {
+
+    final MaterialPageRoute route = MaterialPageRoute(builder: (context) => HomeScreen(roles: roles));
     Navigator.pushReplacement(context, route);
   }
 
@@ -40,10 +40,12 @@ class LoginScreenState extends State<LoginScreen> {
 
     if (response.statusCode == 200) {
       final token = jsonDecode(response.body)['token'];
-
+      final List<dynamic> rolesJson = jsonDecode(response.body)['roles'];
+      final List<String> roles = rolesJson.map((role) => role.toString()).toList();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', token);
-      _navigateToOrdersScreen();
+      await prefs.setStringList('roles', roles);
+      _navigateToHomeScreen(roles);
     } else {
       setState(() {
         errorMessage = 'Неправильный логин или пароль';

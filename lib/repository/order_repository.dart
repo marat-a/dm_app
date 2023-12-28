@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../http_client.dart';
+import 'http_client.dart';
 import '../model/order.dart';
 
 class OrderRepository {

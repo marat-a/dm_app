@@ -1,5 +1,6 @@
+import 'package:dm_app/forms/HomeScreen.dart';
 import 'package:dm_app/forms/order_list_screen.dart';
-import 'package:dm_app/login_screen.dart';
+import 'package:dm_app/forms/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,12 +37,12 @@ class SplashScreenState extends State<SplashScreen> {
   void checkTokenValidity() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-
+    List<String> roles = prefs.getStringList('roles') ?? [];
     Future.delayed(const Duration(seconds: 2), () {
       if (isTokenValid(token)) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const OrderListScreen()),
+          MaterialPageRoute(builder: (context) => HomeScreen(roles: roles)),
         );
       } else {
         Navigator.pushReplacement(

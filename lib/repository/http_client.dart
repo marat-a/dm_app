@@ -42,11 +42,13 @@ class HttpClient {
 
     return await http.post(url, headers: headers, body: jsonEncode(body));
   }
-  static Future<http.Response> put(String path, {String? token, Map<String, String>? body}) async {
+  static Future<http.Response> put(String path, {String? token, Object? body}) async {
     final url = Uri.parse('$baseUrl$path');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? authToken = prefs.getString('token');
     final headers = <String, String>{};
-    if (token != null) {
-      headers[tokenHeader] = 'Bearer $token';
+    if (authToken != null) {
+      headers[tokenHeader] = 'Bearer $authToken';
     }
     headers["Access-Control-Allow-Origin"] = "*";
     headers["Access-Control-Allow-Credentials"] = "true";
