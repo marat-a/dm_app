@@ -1,15 +1,10 @@
-
-
+import 'package:dm_app/forms/user_create_form.dart';
 import 'package:dm_app/forms/user_detail_screen.dart';
-import 'package:dm_app/forms/user_edit_form.dart';
-import 'package:dm_app/forms/user_form.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../model/user.dart';
 import '../repository/http_client.dart';
-import 'user_edit_form.dart';
 
 class UserListScreen extends StatefulWidget {
   const UserListScreen({super.key});
@@ -43,11 +38,12 @@ class UserListScreenState extends State<UserListScreen> {
     }
   }
 
-  void _navigateToUserEdit(User user) {
-    Navigator.push(
+  void _navigateToUserDetailScreen(User user) async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => UserDetailsScreen(user: user)),
     );
+      _loadUsers();
   }
 
   @override
@@ -55,6 +51,23 @@ class UserListScreenState extends State<UserListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Список пользователей'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UserCreateScreen(),
+                ),
+              ).then((result) {
+                if (result != null && result is bool && result) {
+                  _loadUsers();
+                }
+              });
+            },
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: _users.length,
@@ -63,7 +76,7 @@ class UserListScreenState extends State<UserListScreen> {
           return ListTile(
             title: Text(user.name ?? ''),
             subtitle: Text(user.phone ?? ''),
-            onTap: () => _navigateToUserEdit(user),
+            onTap: () => _navigateToUserDetailScreen(user),
           );
         },
       ),

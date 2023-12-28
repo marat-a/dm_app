@@ -45,10 +45,7 @@ class UserDetailsScreen extends StatelessWidget {
             title: const Text('Phone'),
             subtitle: Text(user.phone ?? ''),
           ),
-          ListTile(
-            title: const Text('Password'),
-            subtitle: Text(user.password ?? ''),
-          ),
+
           ListTile(
             title: const Text('Roles'),
             subtitle: Text(_getRolesString(user.roles) ?? ''),

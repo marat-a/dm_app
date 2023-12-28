@@ -8,8 +8,6 @@ import '../model/order.dart';
 class OrderRepository {
   static const baseUrl = 'http://localhost:8080';
 
-
-
   Future<List<Order>> getAllOrders() async {
     final response = await HttpClient.get('/orders');
 
@@ -33,7 +31,8 @@ class OrderRepository {
   }
 
   Future<Order> createOrder(Order order) async {
-    final response = await HttpClient.post('/orders',
+    final response = await HttpClient.post(
+      '/orders',
       body: order,
     );
 
@@ -41,13 +40,14 @@ class OrderRepository {
       final dynamic responseData = jsonDecode(response.body);
       return Order.fromJson(responseData);
     } else {
-      throw Exception('Не удалось создать заказ');
+      throw Exception('Не удалось создать Order');
     }
   }
 
   Future<Order> updateOrder(int id, Order order) async {
-    final response = await HttpClient.post('/orders/$id',
-        body: {'data': jsonEncode(order.toJson())},
+    final response = await HttpClient.post(
+      '/orders/$id',
+      body: {'data': jsonEncode(order.toJson())},
     );
 
     if (response.statusCode == 200) {

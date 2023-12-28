@@ -9,16 +9,12 @@ import '../enums/role.dart';
 import '../model/user.dart';
 import '../repository/http_client.dart';
 
-class UserEditScreen extends StatefulWidget {
-  final User user;
-
-  const UserEditScreen({Key? key, required this.user}) : super(key: key);
-
+class UserCreateScreen extends StatefulWidget {
   @override
-  UserEditScreenState createState() => UserEditScreenState();
+  UserCreateScreenState createState() => UserCreateScreenState();
 }
 
-class UserEditScreenState extends State<UserEditScreen> {
+class UserCreateScreenState extends State<UserCreateScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -31,11 +27,6 @@ class UserEditScreenState extends State<UserEditScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController.text = widget.user.name ?? '';
-    _phoneController.text = widget.user.phone ?? '';
-    _loginController.text = widget.user.login ?? '';
-    _passwordController.text = '';
-    selectedRoles = widget.user.roles ?? {};
 
     // Fetch roles from the API
     fetchRoles();
@@ -70,8 +61,7 @@ class UserEditScreenState extends State<UserEditScreen> {
 
   Future<void> _saveUser() async {
     if (_formKey.currentState!.validate()) {
-      final updatedUser = User(
-        id: widget.user.id,
+      final newUser = User(
         name: _nameController.text,
         phone: _phoneController.text,
         password: _passwordController.text,
@@ -80,12 +70,12 @@ class UserEditScreenState extends State<UserEditScreen> {
       );
 
       try {
-        final response = await HttpClient.put('/users/${widget.user.id}', body: updatedUser);
-        if (response.statusCode == 200) {
-          _showSnackBar('User updated successfully');
-          Navigator.pop(_scaffoldContext);
+        final response = await HttpClient.post('/users', body: newUser);
+        if (response.statusCode == 201) {
+          _showSnackBar('User created successfully');
+          Navigator.pop(_scaffoldContext, true);
         } else {
-          throw Exception('Failed to update user');
+          throw Exception('Failed to create user');
         }
       } catch (e) {
         print(e.toString());
@@ -122,7 +112,7 @@ class UserEditScreenState extends State<UserEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit User'),
+        title: const Text('Create User'),
       ),
       body: Builder(
         builder: (BuildContext context) {
@@ -156,9 +146,13 @@ class UserEditScreenState extends State<UserEditScreen> {
                   TextFormField(
                     controller: _passwordController,
                     decoration: const InputDecoration(labelText: 'Password'),
-
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a password';
+                      }
+                      return null;
+                    },
                   ),
-                  const SizedBox(height: 16),
                   TextFormField(
                     controller: _loginController,
                     decoration: const InputDecoration(labelText: 'Login'),
@@ -179,7 +173,7 @@ class UserEditScreenState extends State<UserEditScreen> {
                   ),
                   ElevatedButton(
                     onPressed: _saveUser,
-                    child: const Text('Save'),
+                    child: const Text('Create'),
                   ),
                 ],
               ),

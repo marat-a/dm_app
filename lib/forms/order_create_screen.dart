@@ -84,17 +84,16 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
       startTime: startTime,
       endTime: endTime,
       courier: _selectedCourier,
-      // deliveryType: DeliveryType.DELIVERY,
       deliveryComment: _deliveryCommentController.text,
     );
 
     final Customer customer = Customer(
-        name: _nameController.text,
-        phone: _phoneController.text,
-        address: _addressController.text);
+      name: _nameController.text,
+      phone: _phoneController.text,
+      address: _addressController.text,
+    );
 
     final order = Order(
-      id: 0,
       deliveryInfo: deliveryInfo,
       products: _products,
       sum: sum,
@@ -108,8 +107,9 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
     _orderRepository
         .createOrder(order)
         .then((_) => Navigator.pop(context))
-        .catchError(
-            (error) => throw Exception('Не создать удалить заказ: $error'));
+        .catchError((error) {
+      throw Exception('Не удалось создать заказ: $error');
+    });
   }
 
   @override
@@ -152,7 +152,7 @@ class OrderCreateScreenState extends State<OrderCreateScreen> {
                 },
                 child: Text(
                   startTime.toString(),
-                  style: TextStyle(color: Colors.blue),
+                  style: const TextStyle(color: Colors.blue),
                 )),
             TextButton(
                 onPressed: () {

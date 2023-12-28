@@ -8,10 +8,6 @@ class Role {
     required this.id,
     required this.name,
   });
-  Role.byName({
-    this.id = 0,
-    required this.name,
-  });
 
   factory Role.fromJson(Map<String, dynamic> json) {
     return Role(
@@ -45,4 +41,16 @@ class Role {
   static String _convertERoleToString(ERole eRole) {
     return eRole.toString().split('.').last;
   }
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Role &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name.name == other.name.name&&
+  name.index == other.name.index;
 }
